@@ -5,11 +5,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 public class Runner {
-
-    private static final Logger LOGGER = Logger.getLogger(Runner.class.getName());
 
     private final String loadPath;
     private final String outputFilePath;
@@ -33,27 +30,29 @@ public class Runner {
 
             final var outputFile = new File(outputFilePath);
             final var printStream = new PrintStream(outputFile);
-            executeMethod(method, printStream);
+
+            final var infoPrintStream = new LevelPrintStream(outputFile, printStream, LogLevelEnum.INFO);
+            final var errorPrintStream = new LevelPrintStream(outputFile, printStream, LogLevelEnum.ERROR);
+
+            executeMethod(method, infoPrintStream, errorPrintStream);
 
         } catch (NoSuchMethodException | IOException | IllegalAccessException e) {
-            LOGGER.severe(e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void createFileIfNotFound(String filePath) throws IOException {
         final var file = new File(filePath);
 
-        if (!file.exists()) {
-            file.createNewFile();
-        }
+        if (!file.exists()) { file.createNewFile(); }
     }
 
-    private void executeMethod(Method method, PrintStream printStream) throws IllegalAccessException {
+    private void executeMethod(Method method, PrintStream infoPrintStream, PrintStream errorPrintStream) throws IllegalAccessException {
         final var oldPrint = System.out;
         final var oldError = System.err;
 
-        System.setOut(printStream);
-        System.setErr(printStream);
+        System.setOut(infoPrintStream);
+        System.setErr(errorPrintStream);
 
         try {
             method.invoke(null, new Object[]{new String[]{}});
@@ -63,5 +62,4 @@ public class Runner {
         System.setOut(oldPrint);
         System.setErr(oldError);
     }
-
 }
