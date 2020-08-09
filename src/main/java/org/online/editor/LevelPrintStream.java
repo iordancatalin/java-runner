@@ -1,7 +1,5 @@
 package org.online.editor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Base64;
 
@@ -10,8 +8,8 @@ public class LevelPrintStream extends PrintStream {
     private final LogLevelEnum level;
     private final PrintStream printStream;
 
-    public LevelPrintStream(File file, PrintStream printStream, LogLevelEnum level) throws FileNotFoundException {
-        super(file);
+    public LevelPrintStream(PrintStream printStream, LogLevelEnum level) {
+        super(System.out);
         this.printStream = printStream;
         this.level = level;
     }

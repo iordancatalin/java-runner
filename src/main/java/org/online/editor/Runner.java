@@ -31,8 +31,8 @@ public class Runner {
             final var outputFile = new File(outputFilePath);
             final var printStream = new PrintStream(outputFile);
 
-            final var infoPrintStream = new LevelPrintStream(outputFile, printStream, LogLevelEnum.INFO);
-            final var errorPrintStream = new LevelPrintStream(outputFile, printStream, LogLevelEnum.ERROR);
+            final var infoPrintStream = new LevelPrintStream(printStream, LogLevelEnum.INFO);
+            final var errorPrintStream = new LevelPrintStream(printStream, LogLevelEnum.ERROR);
 
             executeMethod(method, infoPrintStream, errorPrintStream);
 
